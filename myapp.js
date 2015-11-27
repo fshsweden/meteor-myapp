@@ -69,12 +69,7 @@ if (Meteor.isClient) {
 
       var pl = Players.findOne({_id: playerId});
 
-      Players.update(pl, {clickcount:25});
-
-// TEST
-
-      var pl = Players.findOne({_id: playerId});
-      console.log("Player=" + pl.location);
+      Players.update({_id: pl._id}, {$inc: {clickcount:1}});
 
     }
   });
