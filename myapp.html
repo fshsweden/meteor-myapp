@@ -1,0 +1,43 @@
+<head>
+  <title>Todo List</title>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      {{> loginButtons}}
+      <h1>Todo List</h1>
+    </header>
+
+    <h1> Tasks </h1>
+    <ul>
+      {{#each tasks}}
+      {{> task}}
+      {{/each}}
+
+    </ul>
+
+    <h1> Players </h1>
+    <ul>
+      {{#each players}}
+      {{> player_details}}
+      {{/each}}
+    </ul>
+
+    <h1>Extra</h1>
+    <ul>
+    </ul>
+
+    <button class="xyz" id="adduser">Add User</button>
+ 
+  </div>
+</body>
+
+<template name="task">
+  <li>{{text}}</li>
+</template>
+
+<template name="player_details">
+  <li class="player {{selectedClass}}">{{username}} @ {{location}} Count: {{clickcount}}</li>
+</template>
