@@ -1,6 +1,8 @@
 Players = new Mongo.Collection("players");
 Tasks = new Mongo.Collection("tasks");
 
+Bookings = new Mongo.Collection("bookings");
+
 if (Meteor.isClient) {
 
 /*
@@ -22,8 +24,16 @@ if (Meteor.isClient) {
       return Players.find({});
     },
 
+    bookings_for_selected_week: function() {
+      return Bookings.find({});
+    },
+
     tasks: function() {
       return Tasks.find({});
+    },
+
+    selweek: function() {
+      return Session.get("SelectedWeek");
     }
 
   });
@@ -32,6 +42,10 @@ if (Meteor.isClient) {
     'click button.xyz': function(event, template) {
       console.log("HEJ!");
       alert("Hej!");
+    },
+
+    'change .dropdown' : function(e) { 
+      Session.set("SelectedWeek", e.value);
     }
   });
 
@@ -73,20 +87,33 @@ if (Meteor.isClient) {
 
     }
   });
-
 }
-
-
-
 
 
 
 if (Meteor.isServer) {
 
+    Meteor.methods({
+      getBookingsCount: function () {
+          return Bookings.find().count();
+      }
+    });
+
+    Meteor.startup(function() {
+      console.log("Meteor.startup... count is " + Bookings.findOne({}).count);
+      if (Bookings.findOne({}).count == 0) {
+        console.log("Inserting initial Bookings");
+        Bookings.insert({datum:"2015-11-30", starttid:"08:00", sluttid:"09:00", aktivitet:"Isvård"});
+        Bookings.insert({datum:"2015-11-30", starttid:"09:10", sluttid:"10:10", aktivitet:""});
+        Bookings.insert({datum:"2015-11-30", starttid:"10:20", sluttid:"11:20", aktivitet:"Isvård"});
+        Bookings.insert({datum:"2015-11-30", starttid:"11:30", sluttid:"12:30", aktivitet:"Isvård"});
+        Bookings.insert({datum:"2015-11-30", starttid:"12:40", sluttid:"13:40", aktivitet:"Isvård"});
+      }
+    }); 
+
     // Global configuration
     Api = new Restivus({
-      // version: 'v1',
-      // useDefaultAuth: true,
+      useDefaultAuth: true,
       prettyJson: true
     });
 
@@ -94,25 +121,4 @@ if (Meteor.isServer) {
     // for Meteor.users collection (works on any Mongo collection)
     Api.addCollection(Players);
     // That's it! Many more options are available if needed...
-
-    // Maps to: POST /api/v1/articles/:id
-
-    Api.addRoute(
-      'p/:id',
-      {authRequired: false},
-      {
-        get: function () {
-
-            console.log("id = " + this.urlParams.id);
-
-            var coll = Players.find({"_id":"56545718b160400951111d87"}).fetch();
-            // var pl = Players.findOne({_id: "56545718b160400951111d87"});
-            console.log("Player=" + coll);
-
-            return Players.findOne(this.urlParams.id);
-
-        }
-      }
-    );
-
 }

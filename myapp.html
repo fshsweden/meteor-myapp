@@ -15,7 +15,6 @@
       {{#each tasks}}
       {{> task}}
       {{/each}}
-
     </ul>
 
     <h1> Players </h1>
@@ -25,9 +24,20 @@
       {{/each}}
     </ul>
 
-    <h1>Extra</h1>
-    <ul>
-    </ul>
+    <h1> Bookings {{selweek}} </h1>
+
+    <select class="dropdown">
+      <option value="33">33</option>
+      <option value="34">34</option>
+      <option value="35">35</option>
+      <option value="36">36</option>
+    </select>
+
+    <table class="bookings">
+      {{#each bookings_for_selected_week}}
+      {{> booking_item}}
+      {{/each}}
+    </table>
 
     <button class="xyz" id="adduser">Add User</button>
  
@@ -36,6 +46,14 @@
 
 <template name="task">
   <li>{{text}}</li>
+</template>
+
+<template name="booking_item">
+  <tr>
+  <td>{{starttid}}</td>
+  <td>{{sluttid}}</td>
+  <td>{{aktivitet}}</td>
+  </tr>
 </template>
 
 <template name="player_details">
