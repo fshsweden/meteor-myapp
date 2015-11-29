@@ -18,6 +18,14 @@
     font-size: 14px;
   }
 
+  .bookings {
+    border: 1px black solid;
+
+    tr td {
+      border: 1px black solid;      
+    }
+  }
+
   .container {
     max-width: 600px;
     margin: 0 auto;
