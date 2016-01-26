@@ -5,63 +5,56 @@ Bookings = new Mongo.Collection("bookings");
 
 if (Meteor.isClient) {
 
-/*
-  Object.prototype.getName = function() {
-     var funcNameRegex = /function (.{1,})\(/;
-     var results = (funcNameRegex).exec((this).constructor.toString());
-     return (results && results.length > 1) ? results[1] : "";
-  };
-*/
-
   /*
-      B O D Y
-
+    Object.prototype.getName = function() {
+       var funcNameRegex = /function (.{1,})\(/;
+       var results = (funcNameRegex).exec((this).constructor.toString());
+       return (results && results.length > 1) ? results[1] : "";
+    };
   */
-  Template.body.helpers({
 
+  /* body helpers */
+  Template.body.helpers({
     /* get all users */
     players: function() {
       return Players.find({});
     },
-
     bookings_for_selected_week: function() {
       return Bookings.find({});
     },
-
     tasks: function() {
       return Tasks.find({});
     },
-
     selweek: function() {
       return Session.get("SelectedWeek");
+    },
+    setselweek: function(week) {
+      Session.set("SelectedWeek", week);
     }
-
   });
 
+  /* body events */
   Template.body.events({
+    // button of class "xyz"
     'click button.xyz': function(event, template) {
       console.log("HEJ!");
       alert("Hej!");
     },
-
+    // dropdown list of class "dropdown"
     'change .dropdown' : function(e) { 
-      Session.set("SelectedWeek", e.value);
+      // Session.set("SelectedWeek", e.value);
+      console.log("Selected value is " + e.value);
+      setselweek(e.value)
     }
   });
 
-
-  /*
-    P L A Y E R  D E T A I L S
-  */
-
+  /* player_details helpers */
   Template.player_details.helpers({
     selectedClass: function() {
       var playerId = this._id;
       var selectedPlayer = Session.get('selectedPlayer');
-
       console.log("Selected player is : <" + selectedPlayer + "> and playerId = <" + playerId + ">");
       console.log("Type is : <" + typeof selectedPlayer + "> and = <" + typeof playerId + ">");
-
       if(playerId.toString() == selectedPlayer.toString()) {
         console.log("xxcxcxcxcxcxascxacsxcxcx")
         return "selected";
@@ -72,24 +65,18 @@ if (Meteor.isClient) {
     }
   });
 
+  /* player_details events */
   Template.player_details.events({
     'click .player': function() {
-
       var playerId = this._id;
       Session.set('selectedPlayer', playerId);
       var selectedPlayer = Session.get('selectedPlayer');
-
       console.log("Selecting player:" + selectedPlayer);
-
       var pl = Players.findOne({_id: playerId});
-
       Players.update({_id: pl._id}, {$inc: {clickcount:1}});
-
     }
   });
 }
-
-
 
 if (Meteor.isServer) {
 
